@@ -50,7 +50,7 @@ const containerStyle = useAnimatedStyle(() => {
 
   return (
   <GestureDetector gesture={drag}>
-    <Animated.View style={{ top: -350 }}>
+    <Animated.View style={[containerStyle, { top: -350 }]}>
         <GestureDetector gesture={doubleTap}>
         <Animated.Image
         source={stickerSource}
@@ -58,7 +58,7 @@ const containerStyle = useAnimatedStyle(() => {
         style={[{ width: imageSize, height: imageSize }, imageStyle]}>
         </Animated.Image>
         </GestureDetector>  
-      <Image source={stickerSource} style={{ width: imageSize, height: imageSize }} />
+
     </Animated.View>
     </GestureDetector>
   );
