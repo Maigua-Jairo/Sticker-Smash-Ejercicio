@@ -1,59 +1,107 @@
-import {Text, View,StyleSheet} from 'react-native';
-import ImageViewer from '@/components/image-viewer';
-import Button from '@/components/button';
+import { View, StyleSheet, ImageBackgroundBase, ImageSourcePropType } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import Button from '@/components/button';
+import ImageViewer from '@/components/image-viewer';
 
-const PlaceholderImage=require('@/assets/images/background-image.png')
+import CircleButton from '@/components/circle-button';
+import IconButton from '@/components/icon-buttons';
 
-export default function Index(){
-  const[selectedImage, setSelectedImage]=useState<string | undefined>(undefined);
+import EmojiPicker from '@/components/emoji-picker';
+import EmojiList from '@/components/emoji-list';
+import EmojiSticker from '@/components/emoji-sticker';
 
-  const pickImageAsync=async()=>{
+const PlaceholderImage = require('@/assets/images/background-image.png');
+
+export default function Index() {
+  const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
+  const [showAppOptions, setShowAppOptions] = useState<boolean>(false);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [pickedImage, setPickedImage]=useState<ImageSourcePropType | undefined>(undefined);
+  
+ 
+  const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes:['images'],
+      mediaTypes: ['images'],
       allowsEditing: true,
       quality: 1,
     });
 
-    if(!result.canceled){
+    if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
-    }else{
+      setShowAppOptions(true);
+    } else {
       alert('You did not select any image.');
     }
+  };
+
+
+  const onReset= () =>{
+     setShowAppOptions(false);
   }
-  return(
+
+  const onAddSticker = () =>{
+    setIsModalVisible(true);
+  }
+  const onModalClose = () =>{
+    setIsModalVisible(false);
+  }
+
+  const onSaveImageAsync = ()=>{
+    //later
+  }
+ 
+
+
+  return (
+    <GestureHandlerRootView  style={styles.container}>
     <View style={styles.container}>
-    <View style={styles.ImageContainer}>
-     <ImageViewer imgSource={PlaceholderImage} selectedImage={selectedImage}></ImageViewer>
-     <View style={styles.footerContainer}>
-      <Button theme='primary' label='Choose a photo' onPress={pickImageAsync}/>
-      <Button label='Use this photo'/>
-     </View>
+      <View style={styles.imageContainer}>
+        <ImageViewer imgSource={PlaceholderImage} selectedImage={selectedImage} />
+        {pickedImage && <EmojiSticker imageSize={40} stickerSource={pickedImage}  />}
+      </View>
+      {showAppOptions ? (
+        <View style={styles.optionsContainer}>
+          <View style={styles.optionsRow}>
+            <IconButton icon="refresh" label="Reset" onPress={onReset} />
+            <CircleButton onPress={onAddSticker} />
+            <IconButton icon="save-alt" label="Save" onPress={onSaveImageAsync} />
+          </View>
+        </View>
+      ) : (
+        <View style={styles.footerContainer}>
+          <Button theme="primary" label="Choose a photo" onPress={pickImageAsync} />
+          <Button label="Use this photo" onPress={() => setShowAppOptions(true)} />
+        </View>
+      )}
+      <EmojiPicker isVisible={isModalVisible} onClose={onModalClose}>
+        <EmojiList onSelect={setPickedImage} onCloseModal={onModalClose}></EmojiList>
+      </EmojiPicker>
     </View>
-    </View>
+    </GestureHandlerRootView>
   );
 }
 
-const styles= StyleSheet.create(
-  {
-    container:{
-      flex:1,
-      backgroundColor:"#25292e",
-      alignItems: 'center',
-      justifyContent: 'center'
-    },
-    ImageContainer:{
-      flex:1,
-    },
-    image:{
-      width: 320, 
-      height:440,
-      borderRadius: 18,
-    },
-    footerContainer:{
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#25292e',
+    alignItems: 'center',
+  },
+  imageContainer: {
+    flex: 1,
+  },
+  footerContainer: {
     flex: 1 / 3,
     alignItems: 'center',
-    },
-  }
-);
+  },
+    optionsContainer: {
+    position: 'absolute',
+    bottom: 80,
+  },
+  optionsRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+});
