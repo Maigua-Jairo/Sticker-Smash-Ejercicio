@@ -1,14 +1,14 @@
-import { ImageSourcePropType, View } from 'react-native';
-import { Image } from 'expo-image';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import { ImageSourcePropType } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
 type Props = {
   imageSize: number;
+  imageOffset: number;
   stickerSource: ImageSourcePropType;
 };
 
-export default function EmojiSticker({ imageSize, stickerSource }: Props) {
+export default function EmojiSticker({ imageSize, imageOffset, stickerSource }: Props) {
     const scaleImage= useSharedValue(imageSize);
     const translateX= useSharedValue(0);
     const translateY= useSharedValue(0);
@@ -50,7 +50,7 @@ const containerStyle = useAnimatedStyle(() => {
 
   return (
   <GestureDetector gesture={drag}>
-    <Animated.View style={[containerStyle, { top: -350 }]}>
+    <Animated.View style={[containerStyle, { top: -imageOffset }]}>
         <GestureDetector gesture={doubleTap}>
         <Animated.Image
         source={stickerSource}

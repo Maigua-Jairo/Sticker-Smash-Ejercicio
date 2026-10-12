@@ -1,19 +1,21 @@
-import { Color, Tabs } from "expo-router";
+import EpnColors from '@/constants/epn-colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { StatusBar } from "react-native";
+import { Tabs } from "expo-router";
   
 export default function RootLayout() {
   return (
 <Tabs
   screenOptions={{
-    tabBarActiveTintColor: '#f2ff3d',
+    tabBarActiveTintColor: EpnColors.primary,
+    tabBarInactiveTintColor: EpnColors.secondaryText,
     headerStyle: {
-      backgroundColor: '#25292e',
+      backgroundColor: EpnColors.header,
     },
     headerShadowVisible: false,
-    headerTintColor: '#fff',
+    headerTintColor: EpnColors.surface,
     tabBarStyle: {
-      backgroundColor: '#25292e',
+      backgroundColor: EpnColors.surface,
+      borderTopColor: EpnColors.border,
     },
   }}
 >
