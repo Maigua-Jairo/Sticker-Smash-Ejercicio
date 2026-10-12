@@ -1,6 +1,7 @@
 import { Color, Tabs } from "expo-router";
 import Ionicons from '@expo/vector-icons/Ionicons';
-
+import { StatusBar } from "react-native";
+  
 export default function RootLayout() {
   return (
 <Tabs
